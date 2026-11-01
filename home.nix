@@ -11,19 +11,33 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
   home.username = "user";
   home.homeDirectory = "/home/user";
   home.packages = with pkgs; [
+    pinentry-gnome3
+
     gnomeExtensions.appindicator
-    pkgs.pinentry-gnome3
+    gnomeExtensions.middle-click-to-close-in-overview
+#    gnomeExtensions.swap-finger-gestures-3-to-4 #requires 26.05
+
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+    zsh-z
+
+    file
+    wl-clipboard
     xdg-utils
     unzip
     keepassxc
     firefox
     calibre
     htop
+    glances
     tmux
+    jq
+    arp-scan
     krita
     saber
     libreoffice
     aisleriot
+    nethack
     ungoogled-chromium
     vscodium-fhs
     python3
@@ -69,41 +83,27 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     };
   };
 
-#  programs.gnome-shell.extensions = [
-#    pkgs.gnomeExtensions.appindicator
-#  ];
-
-#pkgs.gnomeExtensions.appindicator appindicatorsupport@rgcjonas.gmail.com
-
   programs.command-not-found.enable = true;
 
 #  services.kbfs.enable = true;
 
-#  programs.bash = {
-#    enable = true;
-#
-#    initExtra = ''
-#      if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-#        source "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-#      fi
-#    '';
-#  };
-  programs.bash.enable = true;
-#  programs.zsh.enable = true;
-  home.sessionPath = [ "${config.home.homeDirectory}/nextcloud/bin" ];
+  programs.zsh.enable = true;
+#  home.sessionPath = [ "${config.home.homeDirectory}/nextcloud/bin" ];
+  home.sessionVariables = {
+    ZSH_AUTOSUGGEST_PLUGIN =
+      "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh";
 
-  home.file = { 
+    ZSH_SYNTAX_HIGHLIGHTING_PLUGIN =
+      "${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh";
 
-#  ".tmux.conf" = {
-#   text = ''
-#   set-option -g default-shell /run/current-system/sw/bin/fish
-#   set-window-option -g mode-keys vi
-#   set -g default-terminal "screen-256color"
-#   set -ga terminal-overrides ',screen-256color:Tc'
-#   '';
-#  };
-
+    ZSH_Z_PLUGIN =
+      "${pkgs.zsh-z}/share/zsh-z/zsh-z.plugin.zsh";
   };
+
+  home.file.".zshrc".source = config.lib.file.mkOutOfStoreSymlink ./appcfg/zshrc;
+  home.file.".nethackrc".source = config.lib.file.mkOutOfStoreSymlink ./appcfg/nethackrc;
+  home.file.".tmux.conf".source = config.lib.file.mkOutOfStoreSymlink ./appcfg/tmux.conf;
+
 
   programs.gpg.enable = true;
 
@@ -197,6 +197,13 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     # Set GNOME to Dark Mode
     "org/gnome/shell" = {
       gtk-theme = "Adwaita-dark";  # Change to Dark Mode theme
+      disable-user-extensions = false;
+      disabled-extensions = [];
+      enabled-extensions = [
+        pkgs.gnomeExtensions.appindicator.extensionUuid
+	pkgs.gnomeExtensions.middle-click-to-close-in-overview.extensionUuid
+#        pkgs.gnomeExtensions.swap-finger-gestures-3-to-4.extensionUuid
+      ];
     };
 
     # disable suspend when plugged in and dim when idle
@@ -311,6 +318,8 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
  
     # Workspace switching (Super+1 to Super+0)
     "org/gnome/desktop/wm/keybindings" = {
+      toggle-fullscreen = [ "<Super>backslash" ];
+
       switch-to-workspace-1  = [ "<Super>1" ];
       switch-to-workspace-2  = [ "<Super>2" ];
       switch-to-workspace-3  = [ "<Super>3" ];

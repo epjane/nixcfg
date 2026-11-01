@@ -95,6 +95,11 @@ in
     };
   };
 
+  # https://community.frame.work/t/enable-trim-unmap-on-the-storage-expansion-card/8885
+  services.udev.extraRules = ''
+    ACTION=="add|change", ATTRS{idVendor}=="13fe", ATTRS{idProduct}=="6500", SUBSYSTEM=="scsi_disk", ATTR{provisioning_mode}="unmap"
+  '';
+
   # Enable CUPS to print documents
   services.printing.enable = true;
 
@@ -112,6 +117,9 @@ in
 
   # Touchpad support
   # services.xserver.libinput.enable = true;
+
+  programs.zsh.enable = true;
+  users.defaultUserShell = pkgs.zsh;
 
   # User account
   users.users.user = { #username is "user"

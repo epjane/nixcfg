@@ -1,0 +1,341 @@
+typeset -U path cdpath fpath manpath
+for profile in ${(z)NIX_PROFILES}; do
+  fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
+done
+
+autoload -U compinit && compinit
+autoload -U colors && colors
+
+# Override broken trashy completion
+function _trash() {
+  _arguments '*:paths:_files'
+}
+
+HISTSIZE=100000
+SAVEHIST=100000
+
+HISTFILE=~/.zhistory
+
+setopt HIST_FCNTL_LOCK
+unsetopt APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+unsetopt HIST_IGNORE_ALL_DUPS
+unsetopt HIST_SAVE_NO_DUPS
+unsetopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_SPACE
+unsetopt HIST_EXPIRE_DUPS_FIRST
+setopt SHARE_HISTORY
+unsetopt EXTENDED_HISTORY
+
+setopt AUTO_CD
+setopt INTERACTIVE_COMMENTS
+
+export GPG_TTY=$TTY
+
+function my_git_prompt_info() {
+  local ref
+  local git_status=""
+  local short_sha
+
+  ref=$(git symbolic-ref --quiet HEAD 2>/dev/null) || return
+
+  ref="${ref#refs/heads/}"
+  short_sha=$(git rev-parse --short HEAD 2>/dev/null)
+
+  # Untracked
+  [[ -n $(git ls-files --others --exclude-standard 2>/dev/null) ]] && git_status+="%%"
+
+  # Added
+  [[ -n $(git diff --cached --name-only --diff-filter=A 2>/dev/null) ]] && git_status+="+"
+
+  # Modified
+  [[ -n $(git diff --name-only 2>/dev/null) ||
+     -n $(git diff --cached --name-only --diff-filter=M 2>/dev/null) ]] &&
+    git_status+="*"
+
+  # Renamed
+  [[ -n $(git diff --cached --name-only --diff-filter=R 2>/dev/null) ]] && git_status+="~"
+
+  # Deleted
+  [[ -n $(git diff --name-only --diff-filter=D 2>/dev/null) ||
+     -n $(git diff --cached --name-only --diff-filter=D 2>/dev/null) ]] &&
+    git_status+="!"
+
+  # Unmerged
+  [[ -n $(git diff --name-only --diff-filter=U 2>/dev/null) ]] && git_status+="?"
+
+  [[ -n "$git_status" ]] && git_status=" $git_status"
+
+  echo "%F{yellow}[${ref} ${short_sha}${git_status}]%f "
+}
+
+function my_virtualenv_prompt() {
+  [[ -n "$VIRTUAL_ENV" ]] &&
+    echo "%F{green}(${VIRTUAL_ENV:t})%f "
+}
+
+setopt PROMPT_SUBST
+
+PROMPT='$(my_virtualenv_prompt)$(my_git_prompt_info)%B%F{cyan}%3~%f%b %(?.%F{white}.%F{red})»%f '
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=8"
+
+typeset -gA ZSH_HIGHLIGHT_STYLES
+
+ZSH_HIGHLIGHT_STYLES[command]='fg=green'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=green'
+ZSH_HIGHLIGHT_STYLES[function]='fg=green'
+ZSH_HIGHLIGHT_STYLES[alias]='fg=green'
+ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=red,bold'
+ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=yellow'
+ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=white'
+ZSH_HIGHLIGHT_STYLES[redirection]='fg=cyan'
+ZSH_HIGHLIGHT_STYLES[path]='fg=cyan,underline'
+ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=yellow'
+ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=yellow'
+
+
+function command_not_found_handler() {
+  command-not-found "$@"
+}
+
+# Double ESC: prepend/remove sudo
+sudo-command-line() {
+  [[ -z $BUFFER ]] && zle up-history
+
+  if [[ $BUFFER == sudo\ * ]]; then
+    BUFFER="${BUFFER#sudo }"
+  else
+    BUFFER="sudo $BUFFER"
+  fi
+
+  zle end-of-line
+}
+
+zle -N sudo-command-line
+
+bindkey -M emacs '\e\e' sudo-command-line
+bindkey -M viins '\e\e' sudo-command-line
+bindkey -M vicmd '\e\e' sudo-command-line
+
+# Terminal title
+autoload -Uz add-zsh-hook
+
+function set-terminal-title() {
+  print -Pn "\e]0;%n@%m: %~\a"
+}
+
+function set-terminal-command-title() {
+  print -Pn "\e]0;%n@%m: %~ — $2\a"
+}
+
+add-zsh-hook precmd set-terminal-title
+add-zsh-hook preexec set-terminal-command-title
+
+
+# Aliases
+alias c="wl-copy"
+alias v="wl-paste"
+
+alias gs="git status"
+alias gd="git diff"
+alias gl="git log"
+alias gcsam="git commit -S -am"
+alias gcsm="git commit -S -m"
+alias gpl="git pull"
+alias gpu="git push"
+alias gpa="git push all"
+
+alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
+alias chmox="chmod +x"
+
+alias wcl="wc -l"
+TMUX_SESSION_NAME=automagic
+alias t="tmux attach -t $TMUX_SESSION_NAME || tmux new -s $TMUX_SESSION_NAME"
+#alias t="tmux attach || tmux"
+alias tdt="tmux detach"
+alias s="screen -r||screen -q"
+
+# auto color
+alias ls="ls --color=auto"
+alias dir="dir --color=auto"
+alias vdir="vdir --color=auto"
+alias grep="grep --color=auto"
+alias fgrep="fgrep --color=auto"
+alias egrep="egrep --color=auto"
+
+# confirm before overwriting something
+alias cp="cp -i"
+alias rm="rm -i"
+alias mv="mv -i"
+
+# human-readable sizes
+alias df="df -h"
+alias free="free -h"
+alias du="du -h"
+
+# misc
+alias dd="dd status=progress"
+alias curl="curl --user-agent 'noleak'"
+alias wget="wget -c --user-agent 'noleak'"
+
+alias ll="ls -lah"
+alias l="ls -lah"
+
+# Functions
+unalias l
+l(){
+    cols=`tput cols`
+    if [[ $# -eq 0 ]]; then
+	      l .
+    fi
+    while [[ $# -gt 0 ]]; do
+        if [[ -f "$1" ]]; then
+            type=`file "$1" | cut -f2 -d: | sed 's/^ //'`
+            if echo "$type" | grep 'ASCII text' > /dev/null; then
+              cat "$1"
+              [ "$(tail -c1 "$1"; echo x)" != $'\nx' ] && echo -e "\e[1;7m%\e[0m"
+              printf '=%.0s' {1..$cols}; echo
+            fi
+            echo -e '\033[92m'"$type"'\033[0m'
+        else
+            ls -lAh "$1"
+        fi
+        printf '-%.0s' {1..$cols}; echo
+        ls -lAh -d "$1"
+        shift
+        if [[ $# -gt 0 ]]; then
+          echo
+          printf '=%.0s' {1..$cols}; echo
+        fi
+    done
+}
+
+open(){
+    if [[ "$#" -eq 1 ]] && echo "$1" | grep "\.html$" > /dev/null; then
+        #browser=`xdg-settings get default-web-browser`
+	#kreadconfig5 --file /usr/share/applications/$browser --group "Desktop Action new-window" --key Exec
+        #gtk-launch firedragon.desktop "$1" &
+        #TODO get gtk-launch to open in a new window
+        firefox --new-window "$1" &
+    else
+        xdg-open $@ &
+    fi
+}
+
+f(){
+    fm=nautilus
+    #fm=nemo
+    #fm=dolphin
+    if [[ $# == 0 ]]; then
+        $fm . &
+    else
+        $fm $@ &
+    fi
+}
+
+co(){
+    co=codium
+    if [[ $# == 0 ]]
+    then
+        $co .
+    else
+        if [[ ! -d "$1" ]] && [[ ! -f "$1" ]]; then
+            mkdir "$1" && \
+            cd "$1" && \
+            git init && \
+            my-git-remotes && \
+            mit && \
+            touch README.md && \
+            cd -
+        fi
+        $co $@
+    fi
+}
+
+my-git-clone(){
+    url="$1"
+    repo="$(basename -s .git "$url")"
+    username="$(basename "$(dirname "$url")")"
+    mkdir -p "$HOME/git/$username"
+    cd "$HOME/git/$username"
+    git clone "$url"
+    cd "$repo"
+}
+
+wind(){
+    find $@ | wc -l
+}
+
+
+activate(){
+    if [[ $# == 0 ]]; then
+        source ".venv/bin/activate"
+    else
+        source "$@/bin/activate"
+    fi
+}
+
+#autocomplete
+setopt completealiases
+
+
+# Key bindings
+#bindkey '^H' backward-kill-word
+#bindkey -M emacs '^[[3;5~' kill-word
+bindkey -M emacs '^[[3;3~' kill-word
+#to find a key combo's code, run `cat`, then type the combo
+#https://superuser.com/questions/997593/why-does-zsh-insert-a-when-i-press-the-delete-key
+
+bindkey -e
+bindkey '^I' expand-or-complete-prefix
+
+bindkey '^[[7~' beginning-of-line                               # Home key
+bindkey '^[[H' beginning-of-line                                # Home key
+if [[ "${terminfo[khome]}" != "" ]]; then
+  bindkey "${terminfo[khome]}" beginning-of-line                # [Home] - Go to beginning of line
+fi
+bindkey '^[[8~' end-of-line                                     # End key
+bindkey '^[[F' end-of-line                                      # End key
+if [[ "${terminfo[kend]}" != "" ]]; then
+  bindkey "${terminfo[kend]}" end-of-line                       # [End] - Go to end of line
+fi
+bindkey '^[[2~' overwrite-mode                                  # Insert key
+bindkey '^[[3~' delete-char                                     # Delete key
+bindkey '^[[C'  forward-char                                    # Right key
+bindkey '^[[D'  backward-char                                   # Left key
+bindkey '^[[5~' history-beginning-search-backward               # Page up key
+bindkey '^[[6~' history-beginning-search-forward                # Page down key
+
+# Navigate words with ctrl+arrow keys
+bindkey '^[Oc' forward-word                                     #
+bindkey '^[Od' backward-word                                    #
+bindkey '^[[1;5D' backward-word                                 #
+bindkey '^[[1;5C' forward-word                                  #
+bindkey '^H' backward-kill-word                                 # delete previous word with ctrl+backspace
+bindkey '^[[Z' undo                                             # Shift+tab undo last action
+
+unsetopt AUTO_REMOVE_SLASH
+setopt AUTO_PARAM_SLASH
+
+
+# Plugins
+plugins=(z autosuggestions syntax-highlighting) #must do syntax-highlighting last
+
+for profile in ${(z)NIX_PROFILES}; do
+  for plugin in $plugins; do
+    for file in $profile/share/zsh-$plugin/*.zsh(N); do
+      source $file
+    done
+  done
+done
+
+#equivalent to:
+# # zsh-z
+# source "$HOME/.nix-profile/share/zsh-z/zsh-z.plugin.zsh"
+
+# # Autosuggestions
+# source "$HOME/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+# # MUST be loaded last
+# source "$HOME/.nix-profile/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"

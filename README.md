@@ -33,9 +33,12 @@ log in with nextcloud
 ### mullvad
 log in
 set location
-launch on startup
-auto-connect
-wireguard
+vpn settings:
+  launch on startup
+  auto-connect
+  wireguard
+user interface settings:
+  start minimized
 
 .config/Mullvad\ VPN/gui_settings.json
 .config/autostart/mullvad-vpn.desktop -> /run/current-system/sw/share/applications/mullvad-vpn.desktop
@@ -90,7 +93,19 @@ nano ~/.config/home-manager/home.nix; nix-shell -p home-manager --command 'home-
 
 ### upgrade
 
-Determine if I need to upgrade from 25.05 to 26.05
+Upgrade from 25.05 to 26.05, needed for some new packages
+
+### gnome gestures
+
+Patch to differentiate between 3 and 4 finger gestures
+
+See: https://codeberg.org/epjane/dotfiles/src/branch/main/roles/gnome-settings
+
+### gnome extensions
+
+Might need 3/4 finger gesture extension
+
+See: https://codeberg.org/epjane/dotfiles/src/branch/main/roles/gnome-extensions
 
 ### midi
 
