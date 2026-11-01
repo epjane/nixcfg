@@ -52,7 +52,11 @@ adnauseam
 ssh-keygen -f ~/.ssh/confuzer
 ssh-copy-id -i ~/.ssh/confuzer.pub confuzer
 ssh-copy-id -i ~/.ssh/confuzer.pub refuzer
+
+ssh-keygen -f ~/.ssh/git
 ```
+
+Copy the `git.pub` key to Codeberg, Sourcehut, and Github.
 
 ### gpg key
 
