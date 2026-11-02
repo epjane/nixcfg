@@ -22,6 +22,9 @@ nix-shell -p home-manager --command 'home-manager switch'
 
 The above installs most things, but some software stil requires manual configuration, such as GUI configs and secrets.
 
+### signal-desktop
+scan the QR code with phone and log in
+
 ### nextcloud-client
 log in
 set sync dir to ~/nextcloud (instead of ~/Nextcloud)

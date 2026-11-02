@@ -57,6 +57,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     steam-run-free
     nextcloud-client
     qbittorrent
+    signal-desktop
   ];
 
   xdg.enable = true;
