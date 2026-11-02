@@ -50,6 +50,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     fluidsynth
     surge-xt
     audacity
+    vlc
     go
     thonny
     godot
@@ -61,11 +62,89 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
   xdg.enable = true;
   xdg.mimeApps = {
     enable = true;
+
+    defaultApplicationPackages = with pkgs; [
+      firefox
+      gnome-text-editor
+      loupe
+      papers
+      vlc
+      file-roller
+      nautilus
+    ];
+
     defaultApplications = {
+      # Browser
       "text/html" = "firefox.desktop";
+      "application/xhtml+xml" = "firefox.desktop";
       "x-scheme-handler/http" = "firefox.desktop";
       "x-scheme-handler/https" = "firefox.desktop";
-      "application/xhtml+xml" = "firefox.desktop";
+      "x-scheme-handler/about" = "firefox.desktop";
+      "x-scheme-handler/unknown" = "firefox.desktop";
+
+      # Text
+      "text/plain" = "org.gnome.TextEditor.desktop";
+      "text/markdown" = "org.gnome.TextEditor.desktop";
+      "text/richtext" = "org.gnome.TextEditor.desktop";
+      "text/csv" = "org.gnome.TextEditor.desktop";
+      "text/tab-separated-values" = "org.gnome.TextEditor.desktop";
+
+      # Source code and configuration
+      "application/json" = "org.gnome.TextEditor.desktop";
+      "application/xml" = "org.gnome.TextEditor.desktop";
+      "text/xml" = "org.gnome.TextEditor.desktop";
+      "text/css" = "org.gnome.TextEditor.desktop";
+      "text/javascript" = "org.gnome.TextEditor.desktop";
+      "application/javascript" = "org.gnome.TextEditor.desktop";
+      "text/x-shellscript" = "org.gnome.TextEditor.desktop";
+      "application/x-shellscript" = "org.gnome.TextEditor.desktop";
+      "text/x-python" = "org.gnome.TextEditor.desktop";
+      "text/x-c" = "org.gnome.TextEditor.desktop";
+      "text/x-c++" = "org.gnome.TextEditor.desktop";
+      "text/x-rust" = "org.gnome.TextEditor.desktop";
+      "text/x-go" = "org.gnome.TextEditor.desktop";
+      "text/x-yaml" = "org.gnome.TextEditor.desktop";
+      "text/x-toml" = "org.gnome.TextEditor.desktop";
+      "text/x-ini" = "org.gnome.TextEditor.desktop";
+      "text/x-makefile" = "org.gnome.TextEditor.desktop";
+
+      # Documents - GNOME Papers
+      "application/pdf" = "org.gnome.Papers.desktop";
+      "application/epub+zip" = "org.gnome.Papers.desktop";
+      "application/x-fictionbook+xml" = "org.gnome.Papers.desktop";
+      "application/postscript" = "org.gnome.Papers.desktop";
+      "image/vnd.djvu" = "org.gnome.Papers.desktop";
+
+      # Images - GNOME Loupe
+      "image/png" = "org.gnome.Loupe.desktop";
+      "image/jpeg" = "org.gnome.Loupe.desktop";
+      "image/gif" = "org.gnome.Loupe.desktop";
+      "image/webp" = "org.gnome.Loupe.desktop";
+      "image/bmp" = "org.gnome.Loupe.desktop";
+      "image/tiff" = "org.gnome.Loupe.desktop";
+      "image/avif" = "org.gnome.Loupe.desktop";
+      "image/heic" = "org.gnome.Loupe.desktop";
+      "image/svg+xml" = "org.gnome.Loupe.desktop";
+      "image/x-icon" = "org.gnome.Loupe.desktop";
+
+      # Audio/Video - VLC
+      "audio/*" = "vlc.desktop";
+      "video/*" = "vlc.desktop";
+
+      # Archives - GNOME File Roller
+      "application/zip" = "org.gnome.FileRoller.desktop";
+      "application/x-tar" = "org.gnome.FileRoller.desktop";
+      "application/gzip" = "org.gnome.FileRoller.desktop";
+      "application/x-gzip" = "org.gnome.FileRoller.desktop";
+      "application/x-bzip2" = "org.gnome.FileRoller.desktop";
+      "application/x-xz" = "org.gnome.FileRoller.desktop";
+      "application/x-7z-compressed" = "org.gnome.FileRoller.desktop";
+      "application/vnd.rar" = "org.gnome.FileRoller.desktop";
+      "application/x-rar" = "org.gnome.FileRoller.desktop";
+      "application/zstd" = "org.gnome.FileRoller.desktop";
+
+      # Directories
+      "inode/directory" = "org.gnome.Nautilus.desktop";
     };
   };
 

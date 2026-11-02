@@ -10,16 +10,15 @@ let
   musnix = builtins.fetchTarball https://github.com/musnix/musnix/archive/master.tar.gz;
 in
 {
-  imports =
-    [
-      #<nixos-hardware/framework/12-inch/13th-gen-intel>
-      (import "${nixos-hardware}/framework/12-inch/13th-gen-intel")
-      /etc/nixos/hardware-configuration.nix # Include the results of the hardware scan
-      #<home-manager/nixos>
-      (import "${home-manager}/nixos")
-      #/home/user/.config/musnix
-      (import "${musnix}")
-    ];
+  imports = [
+    #<nixos-hardware/framework/12-inch/13th-gen-intel>
+    (import "${nixos-hardware}/framework/12-inch/13th-gen-intel")
+    /etc/nixos/hardware-configuration.nix # Include the results of the hardware scan
+    #<home-manager/nixos>
+    (import "${home-manager}/nixos")
+    #/home/user/.config/musnix
+    (import "${musnix}")
+  ];
 
   # Bootloader
   boot.loader.systemd-boot.enable = true;
