@@ -155,6 +155,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
   home.file.".zshrc".source = config.lib.file.mkOutOfStoreSymlink ./appcfg/zshrc;
   home.file.".nethackrc".source = config.lib.file.mkOutOfStoreSymlink ./appcfg/nethackrc;
   home.file.".tmux.conf".source = config.lib.file.mkOutOfStoreSymlink ./appcfg/tmux.conf;
+  home.file.".config/libinput-gestures.conf".source = ./appcfg/libinput-gestures.conf;
 
   programs.gpg.enable = true;
 
@@ -358,6 +359,12 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
       name = "Firefox Private Window";
       command = "firefox --private-window";
       binding = "<Super><Alt>b";
+    };
+
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/vscodium" = {
+      name = "VSCodium";
+      command = "codium";
+      binding = "<Super>i";
     };
 
     # Unbind Super + S from opening the Quick Settings menu

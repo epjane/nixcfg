@@ -114,9 +114,6 @@ in
     #media-session.enable = true;
   };
 
-  # Touchpad support
-  # services.xserver.libinput.enable = true;
-
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
@@ -124,7 +121,7 @@ in
   users.users.user = { #username is "user"
     isNormalUser = true;
     description = "Jane V.";
-    extraGroups = [ "networkmanager" "wheel" "audio" "dialout" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "dialout" "docker" "input" "ydotool" ];
     packages = with pkgs; [
       reaper #TODO get unfree packages working on home-manager
     ];
@@ -152,8 +149,28 @@ in
     # https://discourse.nixos.org/t/mounting-of-camera-not-working-gphoto2-canon-camera/24038/6
     gphoto2
     gphoto2fs
+
+    ydotool
+    libinput-gestures
   ];
   programs.gphoto2.enable = true;
+  programs.ydotool.enable = true;
+  services.libinput.enable = true;
+
+  environment.sessionVariables = {
+    YDOTOOL_SOCKET = "/run/ydotoold/socket";
+  };
+
+  systemd.user.services.libinput-gestures = {
+    description = "Libinput Gestures";
+    wantedBy = [ "default.target" ];
+
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.libinput-gestures}/bin/libinput-gestures";
+      Restart = "on-failure";
+    };
+  };
 
   # Some programs need SUID wrappers, can be configured further or are started in user sessions
   # programs.mtr.enable = true;

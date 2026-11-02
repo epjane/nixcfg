@@ -25,7 +25,8 @@ The above installs most things, but some software stil requires manual configura
 ### nextcloud-client
 log in
 set sync dir to ~/nextcloud (instead of ~/Nextcloud)
-settings -> launch on system startup
+settings -> general -> launch on system startup
+settings -> advanced -> move removed files to trash
 
 ### saber
 log in with nextcloud
@@ -144,18 +145,6 @@ Resolve any warnings or changed config paths and rebuild, until everthing is fix
 
 
 ## TODO
-
-### gnome gestures
-
-Patch to differentiate between 3 and 4 finger gestures
-
-See: https://codeberg.org/epjane/dotfiles/src/branch/main/roles/gnome-settings
-
-### gnome extensions
-
-Might need 3/4 finger gesture extension
-
-See: https://codeberg.org/epjane/dotfiles/src/branch/main/roles/gnome-extensions
 
 ### midi
 
