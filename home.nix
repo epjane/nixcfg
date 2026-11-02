@@ -11,56 +11,102 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
   home.username = "user";
   home.homeDirectory = "/home/user";
   home.packages = with pkgs; [
+    # GNOME
     pinentry-gnome3
-
     gnomeExtensions.appindicator
     gnomeExtensions.middle-click-to-close-in-overview
     gnomeExtensions.swap-finger-gestures-3-to-4
 
+    # Zsh
     zsh-autosuggestions
     zsh-syntax-highlighting
     zsh-z
 
+    # Utils
     file
     wl-clipboard
     xdg-utils
     unzip
-    keepassxc
-    firefox
-    calibre
     htop
     glances
     tmux
     jq
-    arp-scan
-    krita
-    saber
+    meld
+    trashy
+
+    # Coding
+    python3
+    go
+    vscodium-fhs
+    thonny
+    godot
+
+    # Documents
     libreoffice
+    nextcloud-client
+    saber
+    calibre
+
+    # Web
+    firefox
+    ungoogled-chromium
+    arp-scan
+
+    # Security
+    keepassxc
+    signal-desktop
+
+    # Linux ISOs
+    qbittorrent
+
+    # Games
     aisleriot
     nethack
     space-cadet-pinball
-    ungoogled-chromium
-    vscodium-fhs
-    python3
-    kdePackages.kolourpaint
-    kdePackages.kdenlive
-    meld
-    xournalpp
-    trashy
-    qpwgraph
-    reaper
-    mda_lv2
-    fluidsynth
-    surge-xt
-    audacity
-    vlc
-    go
-    thonny
-    godot
     steam-run-free
-    nextcloud-client
-    qbittorrent
-    signal-desktop
+
+    # Drawing
+    krita
+    kdePackages.kolourpaint
+    xournalpp
+
+    # Video
+    kdePackages.kdenlive
+    vlc
+
+    # Music
+    reaper
+    qpwgraph
+    audacity
+
+    # LV2 Plugins
+    mda_lv2
+    distrho-ports
+    swh_lv2
+    lsp-plugins
+    calf
+    gxplugins-lv2
+    x42-plugins
+    zam-plugins
+    dragonfly-reverb
+    chow-tape-model
+
+    # Synths
+    surge-xt
+    yoshimi
+    zynaddsubfx
+    fluidsynth
+    sfizz
+    samplv1
+    synthv1
+    padthv1
+
+    # Drums
+    hydrogen
+    drumgizmo
+    drumkv1
+    x42-avldrums
+    geonkick
   ];
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
@@ -166,6 +212,10 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
   home.file.".nethackrc".source = config.lib.file.mkOutOfStoreSymlink ./appcfg/nethackrc;
   home.file.".tmux.conf".source = config.lib.file.mkOutOfStoreSymlink ./appcfg/tmux.conf;
   home.file.".config/libinput-gestures.conf".source = ./appcfg/libinput-gestures.conf;
+
+  home.file.".lv2".source = "${config.home.homeDirectory}/.nix-profile/lib/lv2";
+  home.file.".vst".source = "${config.home.homeDirectory}/.nix-profile/lib/vst";
+  home.file.".vst3".source = "${config.home.homeDirectory}/.nix-profile/lib/vst3";
 
   programs.gpg.enable = true;
 
