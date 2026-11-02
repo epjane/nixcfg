@@ -80,20 +80,70 @@ gpg --edit-key jane@vandymail.com
 ```
 
 
-## TODO
+## Upgrade
 
-### shortcuts
+### 25.05 to 26.05
 
-Set up aliases for editing nixos and hm configs:
+Check the current channel versions:
 
 ```bash
-sudo nano /etc/nixos/configuration.nix; sudo nixos-rebuild switch
-nano ~/.config/home-manager/home.nix; nix-shell -p home-manager --command 'home-manager switch'
+sudo nix-channel --list
+nix-channel --list
 ```
 
-### upgrade
+Add the new channel:
 
-Upgrade from 25.05 to 26.05, needed for some new packages
+```bash
+sudo nix-channel --add https://channels.nixos.org/nixos-26.05 nixos
+sudo nix-channel --update
+```
+
+```bash
+nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
+```
+
+Edit `configuration.nix` (don't nixos-rebuild switch after!) and replace:
+
+```nix
+  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz;
+```
+
+with:
+
+```nix
+  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz;
+```
+
+Update the channel and build without switching:
+
+```bash
+sudo nix-channel --update
+sudo nixos-rebuild build
+```
+
+Make sure the build succeeds, then switch to it:
+
+```bash
+sudo nixos-rebuild switch
+```
+
+Verify that the versions are updated:
+
+```bash
+sudo nix-channel --list
+nix-channel --list
+```
+
+Update home manager:
+
+```bash
+nix-shell -p home-manager --command 'home-manager switch'
+```
+
+Resolve any warnings or changed config paths and rebuild, until everthing is fixed.
+
+
+## TODO
 
 ### gnome gestures
 

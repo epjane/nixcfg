@@ -3,6 +3,8 @@ for profile in ${(z)NIX_PROFILES}; do
   fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
 done
 
+PATH="$PATH:$HOME/nextcloud/bin"
+
 autoload -U compinit && compinit
 autoload -U colors && colors
 
@@ -134,22 +136,29 @@ add-zsh-hook preexec set-terminal-command-title
 
 
 # Aliases
+
+# nix
+alias nf="sudo nano /etc/nixos/configuration.nix && sudo nixos-rebuild switch" #Nix conFig
+alias hm="nano ~/.config/home-manager/home.nix && nix-shell -p home-manager --command 'home-manager switch'"
+
+# clipboard
 alias c="wl-copy"
 alias v="wl-paste"
 
+# git
+alias gcl="git clone"
+alias gl="git log"
 alias gs="git status"
 alias gd="git diff"
-alias gl="git log"
-alias gcsam="git commit -S -am"
-alias gcsm="git commit -S -m"
+alias gds="git diff --staged"
+alias ga="git add"
+alias gaa="git add --all"
+alias gcm="git commit -S -m"
 alias gpl="git pull"
 alias gpu="git push"
 alias gpa="git push all"
 
-alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
-alias chmox="chmod +x"
-
-alias wcl="wc -l"
+# tmux/screen
 TMUX_SESSION_NAME=automagic
 alias t="tmux attach -t $TMUX_SESSION_NAME || tmux new -s $TMUX_SESSION_NAME"
 #alias t="tmux attach || tmux"
@@ -176,6 +185,9 @@ alias du="du -h"
 
 # misc
 alias dd="dd status=progress"
+alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
+alias chmox="chmod +x"
+alias wcl="wc -l"
 alias curl="curl --user-agent 'noleak'"
 alias wget="wget -c --user-agent 'noleak'"
 
@@ -320,7 +332,7 @@ setopt AUTO_PARAM_SLASH
 
 
 # Plugins
-plugins=(z autosuggestions syntax-highlighting) #must do syntax-highlighting last
+plugins=(z autosuggestions syntax-highlighting) #must load syntax-highlighting last
 
 for profile in ${(z)NIX_PROFILES}; do
   for plugin in $plugins; do
@@ -329,13 +341,3 @@ for profile in ${(z)NIX_PROFILES}; do
     done
   done
 done
-
-#equivalent to:
-# # zsh-z
-# source "$HOME/.nix-profile/share/zsh-z/zsh-z.plugin.zsh"
-
-# # Autosuggestions
-# source "$HOME/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-
-# # MUST be loaded last
-# source "$HOME/.nix-profile/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"

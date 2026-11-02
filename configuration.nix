@@ -5,16 +5,16 @@
 { config, pkgs, lib, ... }:
 
 let
-  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz;
+  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz;
   nixos-hardware = builtins.fetchTarball https://github.com/NixOS/nixos-hardware/archive/refs/heads/master.tar.gz;
   musnix = builtins.fetchTarball https://github.com/musnix/musnix/archive/master.tar.gz;
 in
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
       #<nixos-hardware/framework/12-inch/13th-gen-intel>
       (import "${nixos-hardware}/framework/12-inch/13th-gen-intel")
-      /etc/nixos/hardware-configuration.nix
+      /etc/nixos/hardware-configuration.nix # Include the results of the hardware scan
       #<home-manager/nixos>
       (import "${home-manager}/nixos")
       #/home/user/.config/musnix
@@ -58,8 +58,8 @@ in
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -136,7 +136,7 @@ in
 #  musnix.kernel.realtime = true; #this doesn't work with the intel GPU drivers (i915)
 #  boot.initrd.kernelModules = lib.mkForce [ ]; #disable i915 so that musnix.kernel.realtime works
 #  boot.kernelPackages = pkgs.linuxPackages-rt_latest; #this works with i915 but causes wifi to fail after sleep
-  boot.kernelPackages = pkgs.linuxPackages_rt_6_1; #this works with i915, wifi TODO
+#  boot.kernelPackages = pkgs.linuxPackages_rt_6_1; #this works with i915, wifi TODO #not available on 26.05
 #  boot.kernelPackages = pkgs.linuxPackages_rt_5_10; #TODO try
 
   # Firefox
@@ -181,6 +181,7 @@ in
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.05"; # Did you read the comment?
+  #we are on 26.05 but this needs to stay at 25.05
 
   services.mullvad-vpn.enable = true;
   services.mullvad-vpn.package = pkgs.mullvad-vpn;

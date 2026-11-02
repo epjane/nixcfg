@@ -7,7 +7,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
 
 {
   programs.home-manager.enable = true;
-  home.stateVersion = "25.05";
+  home.stateVersion = "25.05"; #we are on 26.05 but this needs to stay at 25.05
   home.username = "user";
   home.homeDirectory = "/home/user";
   home.packages = with pkgs; [
@@ -15,7 +15,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
 
     gnomeExtensions.appindicator
     gnomeExtensions.middle-click-to-close-in-overview
-#    gnomeExtensions.swap-finger-gestures-3-to-4 #requires 26.05
+    gnomeExtensions.swap-finger-gestures-3-to-4
 
     zsh-autosuggestions
     zsh-syntax-highlighting
@@ -48,7 +48,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     trashy
     qpwgraph
     fluidsynth
-    surge-XT
+    surge-xt
     audacity
     go
     thonny
@@ -57,20 +57,6 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     nextcloud-client
     qbittorrent
   ];
-
-  #https://github.com/nix-community/home-manager/issues/1439#issuecomment-1106208294
-  #for some reason not needed anymore, started seeing double desktop launchers
-#  home.activation = {
-#    linkDesktopApplications = {
-#      after = [ "writeBoundary" "createXdgUserDirectories" ];
-#      before = [ ];
-#      data = ''
-#        rm -rf ${config.xdg.dataHome}/"applications/home-manager"
-#        mkdir -p ${config.xdg.dataHome}/"applications/home-manager"
-#        cp -Lr ${config.home.homeDirectory}/.nix-profile/share/applications/* ${config.xdg.dataHome}/"applications/home-manager/"
-#      '';
-#    };
-#  };
 
   xdg.enable = true;
   xdg.mimeApps = {
@@ -84,34 +70,17 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
   };
 
   programs.command-not-found.enable = true;
-
 #  services.kbfs.enable = true;
-
-  programs.zsh.enable = true;
-#  home.sessionPath = [ "${config.home.homeDirectory}/nextcloud/bin" ];
-  home.sessionVariables = {
-    ZSH_AUTOSUGGEST_PLUGIN =
-      "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh";
-
-    ZSH_SYNTAX_HIGHLIGHTING_PLUGIN =
-      "${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh";
-
-    ZSH_Z_PLUGIN =
-      "${pkgs.zsh-z}/share/zsh-z/zsh-z.plugin.zsh";
-  };
+  programs.zsh.enable = false; #don't autogenerate ~/.zshrc
 
   home.file.".zshrc".source = config.lib.file.mkOutOfStoreSymlink ./appcfg/zshrc;
   home.file.".nethackrc".source = config.lib.file.mkOutOfStoreSymlink ./appcfg/nethackrc;
   home.file.".tmux.conf".source = config.lib.file.mkOutOfStoreSymlink ./appcfg/tmux.conf;
 
-
   programs.gpg.enable = true;
 
   services.gpg-agent = {
     enable = true;
-#    enableSshSupport = true;
-#    defaultCacheTtl = 1800;
-#    pinentry.package = pkgs.pinentry-tty;
     pinentry.package = pkgs.pinentry-gnome3;
     defaultCacheTtl = 3600;
     maxCacheTtl = 7200;
@@ -119,18 +88,18 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
 
   programs.git = {
     enable = true;
-    package = pkgs.gitAndTools.gitFull;
-    userName = "Jane Vandegriff";
-    userEmail = "jane@vandymail.com";
+    package = pkgs.gitFull;
 
     signing = {
       format = "openpgp";
       key = "jane@vandymail.com";
-#      key = "78B26686BE1E4EBADA12C2FB26661099501A7F7D";
       signByDefault = true;
     };
 
-    extraConfig = {
+    settings = {
+      user.name = "Jane Vandegriff";
+      user.email = "jane@vandymail.com";
+
       gpg.format = "openpgp";
 
       alias.pushall = "!git remote | xargs -L1 git push --all";
@@ -142,6 +111,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
 
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
 
     matchBlocks = {
       "*" = {
@@ -167,7 +137,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
   };
 
   dconf.settings = {
-#no error but doesn't work, used keyd in configuration.nix instead:
+# no error but doesn't work, used keyd in configuration.nix instead:
 #    "org/gnome/desktop/input-sources/xkb-options" = {
 #      value = [ "caps:ctrl_modifier" ];
 #    };
@@ -202,7 +172,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
       enabled-extensions = [
         pkgs.gnomeExtensions.appindicator.extensionUuid
 	pkgs.gnomeExtensions.middle-click-to-close-in-overview.extensionUuid
-#        pkgs.gnomeExtensions.swap-finger-gestures-3-to-4.extensionUuid
+        pkgs.gnomeExtensions.swap-finger-gestures-3-to-4.extensionUuid
       ];
     };
 
