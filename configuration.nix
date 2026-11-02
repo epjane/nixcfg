@@ -122,9 +122,8 @@ in
     isNormalUser = true;
     description = "Jane V.";
     extraGroups = [ "networkmanager" "wheel" "audio" "dialout" "docker" "input" "ydotool" ];
-    packages = with pkgs; [
-      reaper #TODO get unfree packages working on home-manager
-    ];
+#    packages = with pkgs; [
+#    ];
   };
 
   # musnix
@@ -137,9 +136,6 @@ in
 
   # Firefox
   #programs.firefox.enable = true;
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

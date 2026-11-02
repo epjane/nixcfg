@@ -149,6 +149,22 @@ Resolve any warnings or changed config paths and rebuild, until everthing is fix
 
 ## TODO
 
+### Steam
+
+Install Steam and test some games
+
+### Reaper
+
+Try Reaper DAW with USB MIDI keyboard and get the latency to be low with realtime kernel
+
+### OBS Studio
+
+### Sound Recording
+
+Try to record desktop audio with Audacity, or install a sound recorder app
+
+### Syncthing
+
 ### midi
 
 ```bash

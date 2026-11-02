@@ -38,6 +38,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     libreoffice
     aisleriot
     nethack
+    space-cadet-pinball
     ungoogled-chromium
     vscodium-fhs
     python3
@@ -47,6 +48,8 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     xournalpp
     trashy
     qpwgraph
+    reaper
+    mda_lv2
     fluidsynth
     surge-xt
     audacity
@@ -58,6 +61,12 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     nextcloud-client
     qbittorrent
     signal-desktop
+  ];
+
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "SpaceCadetPinball"
+    "unrar"
+    "reaper"
   ];
 
   xdg.enable = true;
@@ -240,9 +249,10 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
 
     # Set GNOME Shell to Dark Mode (for both the shell and GTK apps)
     "org/gnome/desktop/interface" = {
-      gtk-theme = "Adwaita-dark";  # Set GTK apps to use the dark theme
-      icon-theme = "Adwaita";      # Optional: ensure icons match the dark theme
+      gtk-theme = "Adwaita-dark";    # Set GTK apps to use the dark theme
+      icon-theme = "Adwaita";        # Optional: ensure icons match the dark theme
       color-scheme = "prefer-dark";  # Set the GNOME Shell to dark mode
+      clock-format = "12h";          # Use AM/PM instead of 24h time
     };
 
     # Set GNOME to Dark Mode
