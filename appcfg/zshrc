@@ -320,12 +320,15 @@ bindkey '^[[5~' history-beginning-search-backward               # Page up key
 bindkey '^[[6~' history-beginning-search-forward                # Page down key
 
 # Navigate words with ctrl+arrow keys
-bindkey '^[Oc' forward-word                                     #
-bindkey '^[Od' backward-word                                    #
-bindkey '^[[1;5D' backward-word                                 #
-bindkey '^[[1;5C' forward-word                                  #
-bindkey '^H' backward-kill-word                                 # delete previous word with ctrl+backspace
-bindkey '^[[Z' undo                                             # Shift+tab undo last action
+bindkey '^[[1;5D' backward-word                                 # Ctrl+Left - move left a word
+bindkey '^[[1;5C' forward-word                                  # Ctrl+Right - move right a word
+bindkey '^H' backward-kill-word                                 # Ctrl+Backspace - delete previous word
+bindkey '^[[3;5~' kill-word                                     # Ctrl+Delete - delete next word
+bindkey '^[u' undo                                              # Alt+U - undo last action
+
+# WORDCHARS defines which symbols to consider part of a word
+# so this will make it stop at any symbol (such as / or -) when jumping/deleting words
+export WORDCHARS=
 
 unsetopt AUTO_REMOVE_SLASH
 setopt AUTO_PARAM_SLASH
