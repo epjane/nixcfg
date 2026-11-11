@@ -175,3 +175,17 @@ echo 'node.features.audio.control-port: true' > ~/.config/wireplumber/wireplumbe
 ### AirVPN
 
 Replace MullvadVPN with AirVPN
+
+### Modules
+
+Break out individual software into modules, for example:
+ * reaper and music plugins
+ * zsh setup
+ * mimetypes
+ * gpg
+ * git
+ * ssh
+ * dconf
+ * keyboard mapping
+ * musnix and pipewire
+ * libinput-gestures and ydotool (or wtype or dotool)

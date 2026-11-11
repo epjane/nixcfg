@@ -33,6 +33,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     jq
     meld
     trashy
+    file-roller
 
     # Coding
     python3
