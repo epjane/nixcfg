@@ -138,8 +138,10 @@ add-zsh-hook preexec set-terminal-command-title
 # Aliases
 
 # nix
-alias nf="sudo nano /etc/nixos/configuration.nix && sudo nixos-rebuild switch" #Nix conFig
-alias hm="nano ~/.config/home-manager/home.nix && nix-shell -p home-manager --command 'home-manager switch'"
+NIXCFG="$HOME/git/epjane/nixcfg/"
+alias rb="sudo nixos-rebuild switch --flake $NIXCFG" #Re-Build
+alias nf="nano $NIXCFG/configuration.nix && rb" #Nix conFig
+alias hm="nano $NIXCFG/home.nix && rb" #Home Manager
 
 # clipboard
 alias c="wl-copy"

@@ -63,7 +63,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     # Games
     aisleriot
     nethack
-    space-cadet-pinball
+    space-cadet-pinball #unfree, requires unrar (also unfree)
     steam-run-free
 
     # Drawing
@@ -76,7 +76,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     vlc
 
     # Music
-    reaper
+    reaper #unfree
     qpwgraph
     audacity
 
@@ -108,12 +108,6 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     drumkv1
     x42-avldrums
     geonkick
-  ];
-
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "SpaceCadetPinball"
-    "unrar"
-    "reaper"
   ];
 
   xdg.enable = true;
@@ -209,14 +203,14 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
 #  services.kbfs.enable = true;
   programs.zsh.enable = false; #don't autogenerate ~/.zshrc
 
-  home.file.".zshrc".source = config.lib.file.mkOutOfStoreSymlink ./appcfg/zshrc;
-  home.file.".nethackrc".source = config.lib.file.mkOutOfStoreSymlink ./appcfg/nethackrc;
-  home.file.".tmux.conf".source = config.lib.file.mkOutOfStoreSymlink ./appcfg/tmux.conf;
+  home.file.".zshrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/git/epjane/nixcfg/appcfg/zshrc";
+  home.file.".nethackrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/git/epjane/nixcfg/appcfg/nethackrc";
+  home.file.".tmux.conf".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/git/epjane/nixcfg/appcfg/tmux.conf";
   home.file.".config/libinput-gestures.conf".source = ./appcfg/libinput-gestures.conf;
 
-  home.file.".lv2".source = "${config.home.homeDirectory}/.nix-profile/lib/lv2";
-  home.file.".vst".source = "${config.home.homeDirectory}/.nix-profile/lib/vst";
-  home.file.".vst3".source = "${config.home.homeDirectory}/.nix-profile/lib/vst3";
+  home.file.".lv2".source = "${config.home.path}/lib/lv2";
+  home.file.".vst".source = "${config.home.path}/lib/vst";
+  home.file.".vst3".source = "${config.home.path}/lib/vst3";
 
   programs.gpg.enable = true;
 

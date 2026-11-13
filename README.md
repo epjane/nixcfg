@@ -5,17 +5,8 @@
 Start with a fresh install of [NixOS](https://nixos.org/download/#nixos) (Graphical, 64-bit Intel/AMD)
 
 ```bash
-mkdir -p ~/git/epjane
-cd ~/git/epjane
-nix-shell -p git --command 'git clone https://codeberg.org/epjane/nixcfg'
-cd nixcfg
-sudo rm /etc/nixos/configuration.nix
-sudo ln -s $(pwd)/configuration.nix /etc/nixos/configuration.nix
-sudo nixos-rebuild switch
-
-mkdir -p ~/.config/home-manager/
-ln -s $(pwd)/home.nix ~/.config/home-manager/home.nix
-nix-shell -p home-manager --command 'home-manager switch'
+nix-shell -p git --command 'git clone https://codeberg.org/epjane/nixcfg ~/git/epjane/nixcfg'
+sudo nixos-rebuild switch --flake ~/git/epjane/nixcfg
 ```
 
 ## Manual Setup
@@ -146,8 +137,30 @@ nix-shell -p home-manager --command 'home-manager switch'
 
 Resolve any warnings or changed config paths and rebuild, until everthing is fixed.
 
+### Migrate to Flakes
+
+<https://phip1611.de/blog/migrate-stock-nixos-configuration-to-flake/>
+
+```bash
+cd ~/git/epjane/nixcfg
+nix flake init --extra-experimental-features nix-command --extra-experimental-features flakes
+#edit flake.nix (not shown here because it's in the repo)
+nix flake update --extra-experimental-features nix-command --extra-experimental-features flakes
+sudo nixos-rebuild switch --flake ~/git/epjane/nixcfg
+sudo nix-channel --remove nixos
+sudo rm /etc/nixos -rf
+rm ~/.config/home-manager/ -rf
+```
+
+Add `nix.settings.experimental-features = "nix-command flakes";` to configuration.nix
+
+Now home-manager rebuilds are managed as part of the flake rebuild, and configured to share nixpkgs with the system.
 
 ## TODO
+
+### Terminal
+
+Touchscreen scroll on terminal
 
 ### Steam
 
@@ -175,6 +188,15 @@ echo 'node.features.audio.control-port: true' > ~/.config/wireplumber/wireplumbe
 ### AirVPN
 
 Replace MullvadVPN with AirVPN
+
+### Paths
+
+Find a way to replace absolute paths to this repo (`~/git/epjane/nixcfg/foo`) with relative ones (`./foo`).
+Used to work before switching to flakes, but now the `./` path is inside the nix store copy instead of the actual dir.
+
+### per-host configs
+
+Using flakes, define different configs for different machines, giving each a folder with configuration.nix, hardware-configuration.nix, home.nix, etc.
 
 ### Modules
 

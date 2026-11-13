@@ -4,21 +4,9 @@
 
 { config, pkgs, lib, ... }:
 
-let
-  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz;
-  nixos-hardware = builtins.fetchTarball https://github.com/NixOS/nixos-hardware/archive/refs/heads/master.tar.gz;
-  musnix = builtins.fetchTarball https://github.com/musnix/musnix/archive/master.tar.gz;
-in
 {
-  imports = [
-    #<nixos-hardware/framework/12-inch/13th-gen-intel>
-    (import "${nixos-hardware}/framework/12-inch/13th-gen-intel")
-    /etc/nixos/hardware-configuration.nix # Include the results of the hardware scan
-    #<home-manager/nixos>
-    (import "${home-manager}/nixos")
-    #/home/user/.config/musnix
-    (import "${musnix}")
-  ];
+  # Flakes
+  nix.settings.experimental-features = "nix-command flakes";
 
   # Bootloader
   boot.loader.systemd-boot.enable = true;
@@ -136,6 +124,13 @@ in
 
   # Firefox
   #programs.firefox.enable = true;
+  
+  # Exceptions to unfree packages must be managed here since home-manager is configured to use system nixpkgs
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "SpaceCadetPinball"
+    "unrar"
+    "reaper"
+  ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
