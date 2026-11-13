@@ -7,7 +7,6 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
 
 {
   programs.home-manager.enable = true;
-  home.stateVersion = "25.05"; #we are on 26.05 but this needs to stay at 25.05
   home.username = "user";
   home.homeDirectory = "/home/user";
   home.packages = with pkgs; [
@@ -248,7 +247,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     enable = true;
     enableDefaultConfig = false;
 
-    matchBlocks = {
+    settings = {
       "*" = {
         serverAliveInterval = 60;
         serverAliveCountMax = 3;

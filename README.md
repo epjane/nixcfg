@@ -6,6 +6,10 @@ Start with a fresh install of [NixOS](https://nixos.org/download/#nixos) (Graphi
 
 ```bash
 nix-shell -p git --command 'git clone https://codeberg.org/epjane/nixcfg ~/git/epjane/nixcfg'
+#look in /etc/nixos/configuration.nix for stateVersion and boot.initrd.luks.devices
+#change stateVersion in flake.nix to match
+#change boot.initrd.luks.devices in configuration.nix to match
+#copy /etc/nixos/hardware-configuration.nix to hardware-configuration.nix
 sudo nixos-rebuild switch --flake ~/git/epjane/nixcfg
 ```
 
