@@ -1,5 +1,20 @@
 {
   "nodes": {
+    "flake-programdb": {
+      "locked": {
+        "lastModified": 1752309838,
+        "narHash": "sha256-/nvb4w4UBjCAeDkr4ISzvpw8/RHLg493P1NFTspT1QU=",
+        "owner": "tejing1",
+        "repo": "flake-programdb",
+        "rev": "7f4c92dcc1b4ae35cd9c76f0e046e9c5298d0197",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tejing1",
+        "repo": "flake-programdb",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": "nixpkgs"
@@ -118,6 +133,7 @@
     },
     "root": {
       "inputs": {
+        "flake-programdb": "flake-programdb",
         "home-manager": "home-manager",
         "musnix": "musnix",
         "nixos-hardware": "nixos-hardware",

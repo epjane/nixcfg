@@ -6,9 +6,10 @@
     home-manager.url = "github:nix-community/home-manager/release-26.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     musnix.url = "github:musnix/musnix";
+    flake-programdb.url = "github:tejing1/flake-programdb";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-hardware, musnix }: {
+  outputs = { self, nixpkgs, home-manager, nixos-hardware, musnix, flake-programdb }: {
     nixosConfigurations = {
       # stateVersion determines the NixOS release from which the default
       # settings for stateful data, like file locations and database versions
@@ -33,6 +34,8 @@
           }
           nixos-hardware.nixosModules.framework-12-13th-gen-intel
           musnix.nixosModules.musnix
+          flake-programdb.nixosModules.flake-programdb
+          { flake-programdb.enable = true; } #fix command-not-found for flakes
         ];
       };
     };

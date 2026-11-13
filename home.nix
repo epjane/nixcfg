@@ -198,7 +198,6 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     };
   };
 
-  programs.command-not-found.enable = true;
 #  services.kbfs.enable = true;
   programs.zsh.enable = false; #don't autogenerate ~/.zshrc
 
