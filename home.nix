@@ -64,6 +64,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     nethack
     space-cadet-pinball #unfree, requires unrar (also unfree)
     steam-run-free
+    prismlauncher #minecraft
 
     # Drawing
     krita

@@ -72,7 +72,11 @@
           main = {
             #when pressed with another key, acts as Ctrl (e.g. Ctrl-C, Ctrl-V)
             #when pressed and released without pressing another key, acts as Esc
-            capslock = "overload(control, esc)";
+            # capslock = "overload(control, esc)";
+
+            #act as just Ctrl for compatibility with minecraft
+            capslock = "rightcontrol";
+
             rightalt = "home";
             rightcontrol = "end";
 #            "meta+semicolon" = "command(/toggle-top.sh)";
