@@ -5,6 +5,18 @@ with builtins;
 with lib;
 with import <home-manager/modules/lib/dag.nix> { inherit lib; };
 
+let
+  freerdp-fixed = pkgs.freerdp.overrideAttrs (old: {
+    version = "3.33.1";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "FreeRDP";
+      repo = "FreeRDP";
+      rev = "3.33.1";
+      hash = "sha256-MjfkJKZhVq2Kp4JvUy04CtwXZFslO6RMmOgBTIf4duk=";
+    };
+  });
+in
 {
   programs.home-manager.enable = true;
   home.username = "user";
@@ -33,6 +45,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
     meld
     trashy
     file-roller
+    freerdp-fixed
 
     # Coding
     python3

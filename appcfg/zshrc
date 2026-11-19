@@ -186,6 +186,7 @@ alias free="free -h"
 alias du="du -h"
 
 # misc
+alias rdp="xfreerdp /d: /bpp:16 /f /smart-sizing"
 alias dd="dd status=progress"
 alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
 alias chmox="chmod +x"
